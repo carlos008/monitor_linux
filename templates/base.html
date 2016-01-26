@@ -20,7 +20,7 @@
             <div class="header">
                 <div class="logo">
                     <a href="{{ url_for(".index") }}">
-                        <span class="app-name"># psdash <small>v0.6.0</small></span>
+                        <span class="app-name"><p><em>MONITOR LINUX</em></p><small></span>
                     </a>
                 </div>
                 <div class="top-nav">
@@ -32,7 +32,7 @@
                             {{ os }}, uptime: {{ uptime }}
                         </div>
                     </div>
-                    <div class="dropdown">
+                    <!--div class="dropdown">
                         <span class="dropdown-text">Switch server:</span>
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                             {{ current_node.name }} ({{ current_node.get_id() }})
@@ -43,7 +43,7 @@
                                 <li><a href="{{ url_for(".index", node=id) }}">{{ n.name }} ({{ id }})</a></li>
                             {% endfor %}
                         </ul>
-                    </div>
+                    </div-->
                 </div>
             </div>
             <div class="table-container">
@@ -53,7 +53,7 @@
                             <li {% if page == "overview" %}class="active"{% endif %}>
                                 <a href="{{ url_for(".index") }}">
                                     <span class="glyphicon glyphicon-th"></span>
-                                    <span class="option-text">Dashboard</span>
+                                    <span class="option-text">Tablero Principal</span>
                                 </a>
                             </li>
                             <li {% if page == "processes" %}class="active"{% endif %}>
@@ -65,7 +65,7 @@
                             <li {% if page == "network" %}class="active"{% endif %}>
                                 <a href="{{ url_for(".view_networks") }}">
                                     <span class="glyphicon glyphicon-transfer"></span>
-                                    <span class="option-text">Network</span>
+                                    <span class="option-text">Red</span>
                                 </a>
                             </li>
                             <li {% if page == "discos" %}class="active"{% endif %}>
@@ -74,12 +74,12 @@
                                     <span class="option-text">Discos</span>
                                 </a>
                             </li>
-                            <li {% if page == "logs" %}class="active"{% endif %}>
+                            <!--li {% if page == "logs" %}class="active"{% endif %}>
                                 <a href="{{ url_for(".view_logs") }}">
                                     <span class="glyphicon glyphicon-book"></span>
-                                    <span class="option-text">Logs</span>
+                                    <span class="option-text">Registros</span>
                                 </a>
-                            </li>
+                            </li-->
                         </ul>
                     </div>
                     <div class="main-content">

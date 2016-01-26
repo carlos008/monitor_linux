@@ -20,6 +20,8 @@ function init_log() {
             return;
         }
 
+
+
         $.get($log.data("read-log-url"), function (resp) {
             // only scroll down if the scroll is already at the bottom.
             if(($el.scrollTop() + $el.innerHeight()) >= $el[0].scrollHeight) {

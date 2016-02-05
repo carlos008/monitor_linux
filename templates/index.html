@@ -3,32 +3,33 @@
     <div id="tablero">
         <div class="box cpu">
             <div class="box-header">
-                <span>CPU</span>
+                <span>,<h1>CPU</h1></span>
             </div>
             <div class="box-content">
                 <table class="table">
                     <tr>
-                        <td class="label-col">Carga Promedio</td>
+                        <td class="label-col"><p><em><h4>Carga Promedio</h4></em></p></td>
                         <td class="load" style="word-spacing: 10px;">{{ load_avg[0]|round(2) }} {{ load_avg[1]|round(2) }} {{ load_avg[2]|round(2) }}</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Usuario</td>
+                        <td class="label-col"><p><em><h4>Usuario</h4></em></p></td>
                         <td class="user">{{ cpu.user }} %</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Sistema</td>
+                        <td class="label-col"><p><em><h4>Sistema</h4></em></p></td>
                         <td class="system">{{ cpu.system }} %</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Ocioso</td>
+                        <td class="label-col"><p><em><h4>Ocioso</h4></em></p></td>
                         <td class="idle">{{ cpu.idle }} %</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Espera I/O</td>
+                        <td class="label-col"><p><em><h4>Espera I/O</h4></em></p></td>
                         <td class="iowait">{{ cpu.iowait }} %</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Nucleos</td>
+                        <td class="label-col"><p><em><h4>Nucleos</h4></em></p>
+                        </td>
                         <td class="iowait">{{ num_cpus }}</td>
                     </tr>
                 </table>
@@ -36,28 +37,28 @@
         </div>
         <div class="box memory">
             <div class="box-header">
-                <span>Memoria</span>
+                <span><h1>Memoria</h1></span>
             </div>
             <div class="box-content">
                 <table class="table">
                     <tr>
-                        <td class="label-col">Total</td>
+                        <td class="label-col"><p><em><h4>Total</h4></em></p></td>
                         <td class="total">{{ memory.total|filesizeformat }}</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Disponible</td>
+                        <td class="label-col"><p><em><h4>Disponible</h4></em></p></td>
                         <td class="available">{{ memory.available|filesizeformat }}</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Usado <small>(excl. cache &amp; buffers)</small></td>
+                        <td class="label-col"><p><em><h4>Usado </h4></em></p><small>(excl. cache &amp; buffers)</small></td>
                         <td class="used_excl">{{ (memory.total - memory.available)|filesizeformat }} ({{ memory.percent }} %)</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Usado <small>(incl. cache &amp; buffers)</small></td>
+                        <td class="label-col"><p><em><h4>Usado </h4></em></p><small>(incl. cache &amp; buffers)</small></td>
                         <td class="used_incl">{{ memory.used|filesizeformat }}</td>
                     </tr>
                     <tr>
-                        <td class="label-col">Libre</td>
+                        <td class="label-col"><p><em><h4>Libre</h4></em></p></td>
                         <td class="free">{{ memory.free|filesizeformat }}</td>
                     </tr>
                 </table>
@@ -65,7 +66,7 @@
         </div>
         <div class="box network">
             <div class="box-header">
-                <span>red</span>
+                <span><h1>red</h1></span>
             </div>
             <div class="box-content">
                 <table class="table">
@@ -92,7 +93,7 @@
         </div>
         <div class="box disks">
             <div class="box-header">
-                <span>Discos</span>
+                <span><h1>Discos<h/</span>
             </div>
             <div class="box-content">
                 <table class="table">
@@ -121,7 +122,7 @@
         </div>
         <div class="box swap">
             <div class="box-header">
-                <span>Intercambio</span>
+                <span><h1>Intercambio</h1></span>
             </div>
             <div class="box-content">
                 <table class="table">
@@ -150,7 +151,7 @@
         </div>
         <div class="box users">
             <div class="box-header">
-                <span>Usuarios</span>
+                <span><h1>Usuarios</h1></span>
             </div>
             <div class="box-content">
                 <table class="table">

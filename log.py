@@ -10,6 +10,7 @@ class LogError(Exception):
     pass
 
 
+
 class ReverseFileSearcher(object):
     DEFAULT_CHUNK_SIZE = 8192
 

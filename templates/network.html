@@ -8,18 +8,18 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Interfaz</th>
-                        <th>IP</th>
-                        <th>Bytes enviados</th>
-                        <th>Bytes recv</th>
-                        <th>Paquetes enviados</th>
-                        <th>Paquetes recv</th>
-                        <th>Errores en</th>
-                        <th>Errores actuales</th>
-                        <th>Falla en</th>
-                        <th>Falla abandonada</th>
-                        <th>RX/s</th>
-                        <th>TX/s</th>
+                        <th><p><em><h4>Interfaz</h4></em></p></th>
+                        <th><p><em><h4>IP</h4></em></p></th>
+                        <th><p><em><h4>Bytes enviados</h4></em></p></th>
+                        <th><p><em><h4>Bytes recv</h4></em></p></th>
+                        <th><p><em><h4>Paquetes enviados</h4></em></p></th>
+                        <th><p><em><h4>Paquetes recv</h4></em></p></th>
+                        <th><p><em><h4>Errores en</h4></em></p></th>
+                        <th><p><em><h4>Errores actuales</h4></em></p></th>
+                        <th><p><em><h4>Falla en</h4></em></p></th>
+                        <th><p><em><h4>Falla abandonada</h4></em></p></th>
+                        <th><p><em><h4>RX/s</h4></em></p></th>
+                        <th><p><em><h4>TX/s</h4></em></p></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +46,7 @@
 
     <div class="box">
         <div class="box-header">
-            <span>Connections</span>
+            <span><p><em><h3>Conexiones</h3></em></p></span>
             <small class="pull-right">Listing {{ connections|count() }} connections</small>
         </div>
         <div class="box-content">
@@ -54,20 +54,20 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>FD</th>
-                            <th>PID</th>
-                            <th>Familia</th>
-                            <th>Tipo</th>
-                            <th>direcciones locales</th>
-                            <th>direccion remota</th>
-                            <th>Estado</th>
+                            <th><p><em><h4>FD</h4></em></p></th>
+                            <th><p><em><h4>PID</h4></em></p></th>
+                            <th><p><em><h4>Familia</h4></em></p></th>
+                            <th><p><em><h4>Tipo</h4></em></p></th>
+                            <th><p><em><h4>direcciones locales</h4></em></p></th>
+                            <th><p><em><h4>direccion remota</h4></em></p></th>
+                            <th><p><em><h4>Estado</h4></em></p></th>
                         </tr>
                         <tr>
                             <th></th>
                             <th></th>
                             <th>
                                 <select name="family">
-                                    <option value="">All</option>
+                                    <option value="">Todas</option>
                                     {% for val in socket_families.itervalues() %}
                                         <option value="{{ val }}" {{'selected="selected"' if family == val}}>{{ val }}</option>
                                     {% endfor %}
@@ -75,7 +75,7 @@
                             </th>
                             <th>
                                 <select name="type">
-                                    <option value="">All</option>
+                                    <option value="">Todas</option>
                                     {% for val in socket_types.itervalues() %}
                                         <option value="{{ val }}"  {{'selected="selected"' if type == val}}>{{ val }}</option>
                                     {% endfor %}
@@ -89,7 +89,7 @@
                             </th>
                             <th>
                                 <select name="state">
-                                    <option value="">All</option>
+                                    <option value="">Todas</option>
                                     {% for val in states %}
                                         <option value="{{ val }}"  {{'selected="selected"' if state == val}}>{{ val }}</option>
                                     {% endfor %}

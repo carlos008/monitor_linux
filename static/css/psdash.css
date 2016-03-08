@@ -5,7 +5,7 @@ body, html {
 }
 
 a {
-    color: #10839d;
+    color: #0A48B9;
 }
 a:hover {
     text-decoration: none;
@@ -21,11 +21,13 @@ a:hover {
 }
 
 #psdash .header .logo a {
-    color: #ffffff;
+    color: #FF9F4C;
+    font-weight: bolder;
+
 }
 
 #psdash .header .logo {
-    background-color: #458bbe;
+    background-color: #4F2500;
     width: 200px;
     position: absolute;
     text-align: center;
@@ -105,7 +107,8 @@ a:hover {
 
 #psdash .table-container .content .left-nav {
     width: 200px;
-    background-color: #313443;
+    background-color: #733910;
+
     color: #ffffff;
 }
 
@@ -122,7 +125,7 @@ a:hover {
     padding-top: 6px;
     padding-left: 20px;
     border-left: 4px solid #313443;
-    color: #adadad;
+    color: #A2CA03;
 }
 
 #psdash .table-container .content .left-nav ul.menu li a span.glyphicon {
@@ -131,6 +134,7 @@ a:hover {
 
 #psdash .table-container .content .left-nav ul.menu li a span.option-text {
     font-size: 16px;
+    color: #C2C505;
     padding-left: 16px;
     line-height: 24px;
     vertical-align: 5px;
@@ -145,7 +149,7 @@ a:hover {
 #psdash .table-container .content .main-content {
     border-top: 1px solid #c1d0d9;
     margin-left: 200px;
-    background-color: #dee2ea;
+    background-color: #C74709;;
     width: 100%;
     padding: 20px;
 }

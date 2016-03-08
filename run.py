@@ -17,31 +17,31 @@ from psdash.node import LocalNode, RemoteNode
 from psdash.web import fromtimestamp
 
 
-logger = getLogger('psdash.run')
+logger = getLogger('psdash.correr')
 
 
-class PsDashRunner(object):
-    DEFAULT_LOG_INTERVAL = 60
-    DEFAULT_NET_IO_COUNTER_INTERVAL = 3
-    DEFAULT_REGISTER_INTERVAL = 60
-    DEFAULT_BIND_HOST = '0.0.0.0'
-    DEFAULT_PORT = 5000
+class monitorLinux(object):
+    DEFAULT_INTERVALO_USUARIO = 60
+    DEFAULT_INTERVALO_CONTORNO_RED_IO = 3
+    DEFAULT_INTERVALO_REGISTRO = 60
+    DEFAULT_ENLAZAR_HOST = '0.0.0.0'
+    DEFAULT_PUERTO = 5000
     LOCAL_NODE = 'localhost'
 
     @classmethod
-    def create_from_cli_args(cls):
+    def crear_args_de_cli(cls):
         return cls(args=None)
 
-    def __init__(self, config_overrides=None, args=tuple()):
+    def __init__(self, anualizaciones_config=None, args=tuple()):
         self._nodes = {}
-        config = self._load_args_config(args)
-        if config_overrides:
-            config.update(config_overrides)
-        self.app = self._create_app(config)
+        config = self._carga_config_args(args)
+        if anualizaciones_config:
+            config.update(anualizaciones_config)
+        self.app = self._crea_app(config)
 
-        self._setup_nodes()
-        self._setup_logging()
-        self._setup_context()
+        self._config_nodos()
+        self._config_usuarios()
+        self._config_contexto()
 
     def _get_args(cls, args):
         parser = argparse.ArgumentParser(
@@ -104,47 +104,47 @@ class PsDashRunner(object):
 
         return parser.parse_args(args)
 
-    def _load_args_config(self, args):
+    def _carga_config_args(self, args):
         config = {}
         for k, v in vars(self._get_args(args)).iteritems():
             if v:
-                key = 'PSDASH_%s' % k.upper() if k != 'debug' else 'DEBUG'
+                tecla = 'PSDASH_%s' % k.upper() if k != 'debug' else 'DEBUG'
                 config[key] = v
         return config
 
-    def _setup_nodes(self):
-        self.add_node(LocalNode())
+    def _config_nodos(self):
+        self.add_nodo(LocalNode())
 
-        nodes = self.app.config.get('PSDASH_NODES', [])
-        logger.info("Registering %d nodes", len(nodes))
-        for n in nodes:
-            self.register_node(n['name'], n['host'], int(n['port']))
+        nodos = self.app.config.get('PSDASH_NODES', [])
+        logger.info("Registering %d _nodes", len(nodos))
+        for n in nodos:
+            self.registrar_nodo(n['nombre'], n['host'], int(n['puerto']))
 
-    def add_node(self, node):
+    def add_nodo(self, node):
         self._nodes[node.get_id()] = node
 
-    def get_local_node(self):
+    def get_nodo_local(self):
         return self._nodes.get(self.LOCAL_NODE)
 
-    def get_node(self, name):
-        return self._nodes.get(name)
+    def get_node(self, nombre):
+        return self._nodes.get(nombre)
 
     def get_nodes(self):
         return self._nodes
 
-    def register_node(self, name, host, port):
-        n = RemoteNode(name, host, port)
-        node = self.get_node(n.get_id())
-        if node:
-            n = node
-            logger.debug("Updating registered node %s", n.get_id())
+    def registrar_nodo(self, nombre, host, puerto):
+        n = NodoRemoto(nombre, host, puerto)
+        nodo = self.get_node(n.get_id())
+        if nodo:
+            n = nodo
+            logger.debug("Actualizando nodo registrado %s", n.get_id())
         else:
-            logger.info("Registering %s", n.get_id())
-        n.update_last_registered()
-        self.add_node(n)
+            logger.info("Registrando %s", n.get_id())
+        n.actualizar_ultimo_registrado()
+        self.add_nodo(n)
         return n
 
-    def _create_app(self, config=None):
+    def _crea_app(self, config=None):
         app = Flask(__name__)
         app.psdash = self
         app.config.from_envvar('PSDASH_CONFIG', silent=True)
@@ -152,7 +152,7 @@ class PsDashRunner(object):
         if config and isinstance(config, dict):
             app.config.update(config)
 
-        self._load_allowed_remote_addresses(app)
+        self._cargar_direccciones_remotas_permitidas(app)
 
         # If the secret key is not read from the config just set it to something.
         if not app.secret_key:
@@ -168,8 +168,8 @@ class PsDashRunner(object):
 
         return app
 
-    def _load_allowed_remote_addresses(self, app):
-        key = 'PSDASH_ALLOWED_REMOTE_ADDRESSES'
+    def _cargar_direccciones_remotas_permitidas(self, app):
+        key = 'PSDASH_LLAMADA_DIRECCION_REMOTA'
         addrs = app.config.get(key)
         if not addrs:
             return
@@ -177,9 +177,9 @@ class PsDashRunner(object):
         if isinstance(addrs, (str, unicode)):
             app.config[key] = [a.strip() for a in addrs.split(',')]
 
-    def _setup_logging(self):
-        level = self.app.config.get('PSDASH_LOG_LEVEL', logging.INFO) if not self.app.debug else logging.DEBUG
-        format = self.app.config.get('PSDASH_LOG_FORMAT', '%(levelname)s | %(name)s | %(message)s')
+    def _config_usuarios(self):
+        level = self.app.config.get('PSDASH_NIVEL_USUARIO', logging.INFO) if not self.app.debug else logging.DEBUG
+        format = self.app.config.get('PSDASH_FORMATO_USUARIO', '%(levelname)s | %(name)s | %(message)s')
 
         logging.basicConfig(
             level=level,
@@ -187,53 +187,53 @@ class PsDashRunner(object):
         )
         logging.getLogger('werkzeug').setLevel(logging.WARNING if not self.app.debug else logging.DEBUG)
         
-    def _setup_workers(self):
-        net_io_interval = self.app.config.get('PSDASH_NET_IO_COUNTER_INTERVAL', self.DEFAULT_NET_IO_COUNTER_INTERVAL)
-        gevent.spawn_later(net_io_interval, self._net_io_counters_worker, net_io_interval)
+    def _config_trabajadores(self):
+        net_io_interval = self.app.config.get('PSDASH_INTERVALO_CONTORNO_RED_IO', self.DEFAULT_INTERVALO_CONTORNO_RED_IO)
+        gevent.spawn_later(net_io_interval, self._contadores_trabajador_red_io, net_io_interval)
 
         if 'PSDASH_LOGS' in self.app.config:
             logs_interval = self.app.config.get('PSDASH_LOGS_INTERVAL', self.DEFAULT_LOG_INTERVAL)
             gevent.spawn_later(logs_interval, self._logs_worker, logs_interval)
 
         if self.app.config.get('PSDASH_AGENT'):
-            register_interval = self.app.config.get('PSDASH_REGISTER_INTERVAL', self.DEFAULT_REGISTER_INTERVAL)
+            register_interval = self.app.config.get('PSDASH_INTERVALO_REGISTRO', self.DEFAULT_INTERVALO_REGISTRO)
             gevent.spawn_later(register_interval, self._register_agent_worker, register_interval)
 
-    def _setup_locale(self):
+    def _config_lugar(self):
         # This set locale to the user default (usually controlled by the LANG env var)
         locale.setlocale(locale.LC_ALL, '')
 
-    def _setup_context(self):
-        self.get_local_node().net_io_counters.update()
+    def _config_contexto(self):
+        self.get_nodo_local().net_io_counters.update()
         if 'PSDASH_LOGS' in self.app.config:
-            self.get_local_node().logs.add_patterns(self.app.config['PSDASH_LOGS'])
+            self.get_nodo_local().logs.add_patterns(self.app.config['PSDASH_LOGS'])
 
-    def _logs_worker(self, sleep_interval):
+    def _sesion_trabajador(self, sleep_interval):
         while True:
-            logger.debug("Reloading logs...")
-            self.get_local_node().logs.add_patterns(self.app.config['PSDASH_LOGS'])
+            logger.debug("Recargando usuarios...")
+            self.get_nodo_local.logs.add_patterns(self.app.config['PSDASH_LOGS'])
             gevent.sleep(sleep_interval)
 
-    def _register_agent_worker(self, sleep_interval):
+    def _registrar_trabajador_agent(self, sleep_interval):
         while True:
-            logger.debug("Registering agent...")
-            self._register_agent()
+            logger.debug("Registrando agent...")
+            self._registrar_agent()
             gevent.sleep(sleep_interval)
 
-    def _net_io_counters_worker(self, sleep_interval):
+    def _contadores_trabajador_red_io(self, sleep_interval):
         while True:
-            logger.debug("Updating net io counters...")
-            self.get_local_node().net_io_counters.update()
+            logger.debug("Subiendo red contadores io ...")
+            self.get_nodo_local().net_io_counters.update()
             gevent.sleep(sleep_interval)
 
-    def _register_agent(self):
-        register_name = self.app.config.get('PSDASH_REGISTER_AS')
-        if not register_name:
-            register_name = socket.gethostname()
+    def _registrar_agent(self):
+        registrar_nombre = self.app.config.get('PSDASH_REGISTRAR_COMO')
+        if not registrar_nombre:
+            registrar_nombre = socket.gethostname()
 
         url_args = {
-            'name': register_name,
-            'port': self.app.config.get('PSDASH_PORT', self.DEFAULT_PORT),
+            'nombre': registrar_nombre,
+            'puerto': self.app.config.get('PSDASH_PUERTO', self.DEFAULT_PUERTO),
         }
         register_url = '%s/register?%s' % (self.app.config['PSDASH_REGISTER_TO'], urllib.urlencode(url_args))
 
@@ -251,22 +251,22 @@ class PsDashRunner(object):
         try:
             urllib2.urlopen(register_url)
         except urllib2.HTTPError as e:
-            logger.error('Failed to register agent to "%s": %s', register_url, e)
+            logger.error('Fallo a registrar agente a "%s": %s', register_url, e)
 
-    def _run_rpc(self):
-        logger.info("Starting RPC server (agent mode)")
+    def _correr_rpc(self):
+        logger.info("iniciando servidor RPC (modo agente)")
 
-        if 'PSDASH_REGISTER_TO' in self.app.config:
-            self._register_agent()
+        if 'PSDASH_REGISTRAR A' in self.app.config:
+            self._registrar_agent()
 
-        service = self.get_local_node().get_service()
+        service = self.get_nodo_local().get_service()
         self.server = zerorpc.Server(service)
-        self.server.bind('tcp://%s:%s' % (self.app.config.get('PSDASH_BIND_HOST', self.DEFAULT_BIND_HOST),
-                                          self.app.config.get('PSDASH_PORT', self.DEFAULT_PORT)))
+        self.server.bind('tcp://%s:%s' % (self.app.config.get('PSDASH_ENLAZAR_HOST', self.DEFAULT_ENLAZAR_HOST),
+                                          self.app.config.get('PSDASH_PUERTO', self.DEFAULT_PUERTO)))
         self.server.run()
 
     def _run_web(self):
-        logger.info("Starting web server")
+        logger.info("Iniciando servidor web")
         log = 'default' if self.app.debug else None
 
         ssl_args = {}
@@ -277,8 +277,8 @@ class PsDashRunner(object):
             }
 
         listen_to = (
-            self.app.config.get('PSDASH_BIND_HOST', self.DEFAULT_BIND_HOST),
-            self.app.config.get('PSDASH_PORT', self.DEFAULT_PORT)
+            self.app.config.get('PSDASH_ENLAZAR_HOST', self.DEFAULT_ENLAZAR_HOST),
+            self.app.config.get('PSDASH_PUERTO', self.DEFAULT_PUERTO)
         )
         self.server = WSGIServer(
             listen_to,
@@ -288,26 +288,26 @@ class PsDashRunner(object):
         )
         self.server.serve_forever()
 
-    def run(self):
-        logger.info('Starting psdash v%s' % __version__)
+    def correr(self):
+        logger.info('iniciando psDash v%s' % __version__)
 
-        self._setup_locale()
-        self._setup_workers()
+        self._config_lugar()
+        self._config_trabajadores()
 
-        logger.info('Listening on %s:%s',
-                    self.app.config.get('PSDASH_BIND_HOST', self.DEFAULT_BIND_HOST),
-                    self.app.config.get('PSDASH_PORT', self.DEFAULT_PORT))
+        logger.info('Listando en %s:%s',
+                    self.app.config.get('PSDASH_ENLAZAR_HOST', self.DEFAULT_ENLAZAR_HOST),
+                    self.app.config.get('PSDASH_PUERTO', self.DEFAULT_PUERTO))
 
-        if self.app.config.get('PSDASH_AGENT'):
-            return self._run_rpc()
+        if self.app.config.get('PSDASH_AGENTE'):
+            return self._correr_rpc()
         else:
             return self._run_web()
 
 
-def main():
-    r = PsDashRunner.create_from_cli_args()
-    r.run()
+def principal():
+    r = monitorLinux.crear_args_de_cli()
+    r.correr()
     
 
 if __name__ == '__main__':
-    main()
+    principal()

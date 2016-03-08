@@ -9,7 +9,7 @@ a {
 }
 a:hover {
     text-decoration: none;
-    color: #0fa2c2;
+    color: #FF0066;
 }
 
 #psdash {
@@ -28,6 +28,7 @@ a:hover {
 
 #psdash .header .logo {
     background-color: #4F2500;
+    color: #FF0066;
     width: 200px;
     position: absolute;
     text-align: center;
@@ -172,7 +173,7 @@ a:hover {
     min-width: 300px;
 }
 
-#dashboard div.box.users {
+#dashboard div.box.useruarios {
     min-width: 500px;
 }
 
@@ -180,15 +181,15 @@ a:hover {
     min-width: 350px;
 }
 
-#dashboard div.box.memory {
+#dashboard div.box.memoria {
     min-width: 400px;
 }
 
-#dashboard div.box.network {
+#dashboard div.box.red {
     min-width: 500px;
 }
 
-#dashboard div.box.disks {
+#dashboard div.box.discos {
     min-width: 500px;
 }
 #dashboard div.box.logs{
@@ -259,15 +260,15 @@ a:hover {
     background-color: #d43f3a;
 }
 
-#network div.box, #connections div.box, #disks div.box {
+#red div.box, #conexiones div.box, #discos div.box {
     width: 100%;
 }
 
-#process {
+#proceso {
     width: 100%;
 }
 
-#process table tr.skip-border td {
+#proceso table tr.skip-border td {
     border-top: 0;
 }
 
@@ -284,9 +285,9 @@ a:hover {
     white-space: pre-wrap;
 }
 
-#log .search-text {
-    background-color: #2d2d2d;
-    color: #747474;
+#log .buscar-texto {
+    background-color: #FF0033;
+    color: #FF0033;
     border-color: #3d3d3d;
 }
 

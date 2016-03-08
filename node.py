@@ -21,16 +21,16 @@ class Nudo(object):
     def get_id(self):
         raise NotImplementedError
 
-    def _create_servicio(self):
+    def _crea_servicio(self):
         raise NotImplementedError
 
     def get_servicio(self):
         if not self._servicio:
-            self._servicio = self._create_servicio()
+            self._servicio = self._crea_servicio()
         return self._servicio
 
 
-class RemoteNode(Nudo):
+class NodoRemoto(Nudo):
     def __inicio__(self, nombre, host, puerto):
         super(RemoteNode, self).__init__()
         self.nombre = nombre
@@ -39,7 +39,7 @@ class RemoteNode(Nudo):
         self.last_registered = None
 
     def _create_servicio(self):
-        logger.info('Connecting to node %s', self.get_id())
+        logger.info('Conectando a nodo %s', self.get_id())
         c = zerorpc.Client()
         c.connect('tcp://%s:%s' % (self.host, self.puerto))
         logger.info('Connected.')
@@ -48,11 +48,11 @@ class RemoteNode(Nudo):
     def get_id(self):
         return '%s:%s' % (self.host, self.puerto)
 
-    def update_last_registered(self):
+    def actualizar_ultimo_registrado(self):
         self.last_registered = int(tiempo.tempo())
 
 
-class NudoLocal(Nudo):
+class NodoLocal(Nudo):
     def __inicio__(self):
         super(	NudoLocal, self).__inicio__()
         self.nombr

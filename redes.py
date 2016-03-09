@@ -1,9 +1,6 @@
 # coding=utf-8
 
-import psutil
-import time
-import netifaces
-
+import psutil, time, netifaces
 
 class NetIOCounters(object):
     def __init__(self, pernic=True):

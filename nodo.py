@@ -1,78 +1,71 @@
 # coding=UTF-8
-import logging
-import os
-import platform
-import psutil
-import socket
-import time
-import zerorpc
-from monitorps.log import Logs
-from monitorps.helpers import socket_families, socket_types
-from monitorps.net import get_interface_addresses, NetIOCounters
+import logging, os, platform, psutil, socket, time, zerorpc
+from log import Logs
+from helpers import socket_families, socket_types
+from redes import get_interface_addresses, NetIOCounters
 
 
 logger = logging.getLogger("psdash.node")
 
 
 class Nodo(object):
-    def __inicio__(self):
-        self._servicio = None
+    def __init__(self):
+        self._service = None
 
     def get_id(self):
         raise NotImplementedError
 
-    def _crea_servicio(self):
+    def _create_service(self):
         raise NotImplementedError
 
-    def get_servicio(self):
-        if not self._servicio:
-            self._servicio = self._crea_servicio()
-        return self._servicio
+    def get_service(self):
+        if not self._service:
+            self._service = self._create_service()
+        return self._service
 
 
-class NodoRemoto(Nudo):
-    def __inicio__(self, nombre, host, puerto):
-        super(RemoteNode, self).__init__()
-        self.nombre = nombre
+class NodoRemoto(Nodo):
+    def __init__(self, name, host, port):
+        super(NodoRemoto, self).__init__()
+        self.name = name
         self.host = host
-        self.puerto = int(puerto)
+        self.port = int(port)
         self.last_registered = None
 
-    def _create_servicio(self):
-        logger.info('Conectando a nodo %s', self.get_id())
+    def _create_service(self):
+        logger.info('Connecting to node %s', self.get_id())
         c = zerorpc.Client()
-        c.connect('tcp://%s:%s' % (self.host, self.puerto))
+        c.connect('tcp://%s:%s' % (self.host, self.port))
         logger.info('Connected.')
         return c
 
     def get_id(self):
-        return '%s:%s' % (self.host, self.puerto)
+        return '%s:%s' % (self.host, self.port)
 
-    def actualizar_ultimo_registrado(self):
-        self.last_registered = int(tiempo.tempo())
+    def update_last_registered(self):
+        self.last_registered = int(time.time())
 
 
-class NodoLocal(Nudo):
-    def __inicio__(self):
-        super(	NodoLocal, self).__inicio__()
-        self.nombr
- = "psDash"
+class NodoLocal(Nodo):
+    def __init__(self):
+        super(NodoLocal, self).__init__()
+        self.name = "psDash"
         self.net_io_counters = NetIOCounters()
         self.logs = Logs()
 
     def get_id(self):
         return 'localhost'
 
-    def _create_servicio(self):
-        return ServicioLocal(self)
+    def _create_service(self):
+        return LocalService(self)
 
 
-class ServicioLocal(object):
-    def __inicio__(self, nudo):
-        self.nodo = nodo
+class LocalService(object):
+    def __init__(self, node):
+        self.node = node
 
     def get_sysinfo(self):
-        uptime = int(tiempo.tiempo() - psutil.boot_time())
+        uptime = int(time.time() - psutil.boot_time())
         sysinfo = {
             'uptime': uptime,
             'hostname': socket.gethostname(),
@@ -104,11 +97,11 @@ class ServicioLocal(object):
     def get_cpu_cores(self):
         return [c._asdict() for c in psutil.cpu_times_percent(0, percpu=True)]
 
-    def get_discos(self, todas_particiones=False):
-        discos = []
-        for dp in psutil.disco_particiones(todas_particiones):
-            usage = psutil.disco_usage(dp.mountpoint)
-            disco = {
+    def get_disks(self, all_partitions=False):
+        disks = []
+        for dp in psutil.disk_partitions(all_partitions):
+            usage = psutil.disk_usage(dp.mountpoint)
+            disk = {
                 'device': dp.device,
                 'mountpoint': dp.mountpoint,
                 'type': dp.fstype,
@@ -118,27 +111,27 @@ class ServicioLocal(object):
                 'space_used_percent': usage.percent,
                 'space_free': usage.free
             }
-            discos.append(disco)
+            disks.append(disk)
 
-        return discos
+        return disks
 
     def get_disks_counters(self, perdisk=True):
         return dict((dev, c._asdict()) for dev, c in psutil.disk_io_counters(perdisk=perdisk).iteritems())
 
-    def get_usuarios(self):
-        return [u._asdict() for u in psutil.usuarios()]
+    def get_users(self):
+        return [u._asdict() for u in psutil.users()]
 
     def get_network_interfaces(self):
-        io_counters = self.nudo.net_io_counters.get()
-        direcciones = get_interface_direcciones()
+        io_counters = self.node.net_io_counters.get()
+        addresses = get_interface_addresses()
 
         netifs = {}
-        for addr in direcciones:
-            c = io_counters.get(addr['nombre'])
+        for addr in addresses:
+            c = io_counters.get(addr['name'])
             if not c:
                 continue
-            netifs[addr['nombre']] = {
-                'nombre': addr['nombre'],
+            netifs[addr['name']] = {
+                'name': addr['name'],
                 'ip': addr['ip'],
                 'bytes_sent': c['bytes_sent'],
                 'bytes_recv': c['bytes_recv'],
@@ -154,51 +147,51 @@ class ServicioLocal(object):
 
         return netifs
 
-    def get_lista_procesos(self):
-        lista_procesos = []
+    def get_process_list(self):
+        process_list = []
         for p in psutil.process_iter():
             mem = p.memory_info()
-            
+
             # psutil throws a KeyError when the uid of a process is not associated with an user.
             try:
-                nombreusuario = p.nombreusuario()
+                username = p.username()
             except KeyError:
-                nombreusuario = None
+                username = None
 
             proc = {
                 'pid': p.pid,
-                'nombre': p.nombre(),
+                'name': p.name(),
                 'cmdline': ' '.join(p.cmdline()),
-                'usuario': nombreusuario,
-                'estado': p.estado(),
+                'user': username,
+                'status': p.status(),
                 'created': p.create_time(),
                 'mem_rss': mem.rss,
                 'mem_vms': mem.vms,
                 'mem_percent': p.memory_percent(),
                 'cpu_percent': p.cpu_percent(0)
             }
-            lista_procesos.append(proc)
+            process_list.append(proc)
 
-        return lista_procesos
+        return process_list
 
-    def get_procesos(self, pid):
-        p = psutil.Procesos(pid)
+    def get_process(self, pid):
+        p = psutil.Process(pid)
         mem = p.memory_info_ex()
         cpu_times = p.cpu_times()
 
         # psutil throws a KeyError when the uid of a process is not associated with an user.
         try:
-            nombreusuario = p.nombreusuario()
+            username = p.username()
         except KeyError:
-            nombreusuario = None
+            username = None
 
         return {
             'pid': p.pid,
             'ppid': p.ppid(),
-            'parent_name': p.parent().nombre() if p.parent() else '',
-            'nombre': p.nombre(),
+            'parent_name': p.parent().name() if p.parent() else '',
+            'name': p.name(),
             'cmdline': ' '.join(p.cmdline()),
-            'usuario': nombreusuario,
+            'user': username,
             'uid_real': p.uids().real,
             'uid_effective': p.uids().effective,
             'uid_saved': p.uids().saved,
@@ -231,8 +224,8 @@ class ServicioLocal(object):
             'cpu_affinity': p.cpu_affinity()
         }
 
-    def get_limites_procesos(self, pid):
-        p = psutil.Procesos(pid)
+    def get_process_limits(self, pid):
+        p = psutil.Process(pid)
         return {
             'RLIMIT_AS': p.rlimit(psutil.RLIMIT_AS),
             'RLIMIT_CORE': p.rlimit(psutil.RLIMIT_CORE),
@@ -258,26 +251,26 @@ class ServicioLocal(object):
             env_vars = dict(row.split('=', 1) for row in contents.split('\0') if '=' in row)
         return env_vars
 
-    def get_process_hilos(self, pid):
-        hilos = []
+    def get_process_threads(self, pid):
+        threads = []
         proc = psutil.Process(pid)
-        for t in proc.hilos():
-            hilo = {
+        for t in proc.threads():
+            thread = {
                 'id': t.id,
                 'cpu_time_user': t.user_time,
                 'cpu_time_system': t.system_time,
             }
-            hilos.append(hilo)
-        return hilos
+            threads.append(thread)
+        return threads
 
     def get_process_open_files(self, pid):
         proc = psutil.Process(pid)
         return [f._asdict() for f in proc.open_files()]
 
-    def get_conexiones_procesos(self, pid):
-        proc = psutil.Procesos(pid)
-        conexiones = []
-        for c in proc.conexiones(kind='all'):
+    def get_process_connections(self, pid):
+        proc = psutil.Process(pid)
+        connections = []
+        for c in proc.connections(kind='all'):
             conn = {
                 'fd': c.fd,
                 'family': socket_families[c.family],
@@ -288,9 +281,9 @@ class ServicioLocal(object):
                 'remote_addr_port': c.raddr[1] if c.raddr else None,
                 'state': c.status
             }
-            conexiones.append(conn)
+            connections.append(conn)
 
-        return conexiones
+        return connections
 
     def get_process_memory_maps(self, pid):
         return [m._asdict() for m in psutil.Process(pid).memory_maps()]

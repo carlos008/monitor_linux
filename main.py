@@ -3,21 +3,16 @@ from gevent.monkey import patch_all
 patch_all()
 
 from gevent.pywsgi import WSGIServer
-import locale
-import argparse
-import logging
-import socket
-import urllib
-import urllib2
+import locale, argparse, logging, socket, urllib, urllib2
 from logging import getLogger
 from flask import Flask
 import zerorpc
-from psdash import __version__
-from psdash.node import LocalNode, RemoteNode
-from psdash.web import fromtimestamp
+__version__ = '0.6.2'
+from nodo import NodoLocal, NodoRemoto
+from controlador_web import fromtimestamp
 
 
-logger = getLogger('monitorps.correr')
+logger = getLogger( 'monitorps.correr' )
 
 
 class monitorLinux(object):
@@ -113,7 +108,7 @@ class monitorLinux(object):
         return config
 
     def _config_nodos(self):
-        self.add_nodo(LocalNode())
+        self.add_nodo(NodoLocal())
 
         nodos = self.app.config.get('PSDASH_NODES', [])
         logger.info("Registering %d _nodes", len(nodos))
@@ -145,7 +140,7 @@ class monitorLinux(object):
         return n
 
     def _crea_app(self, config=None):
-        app = Flask(__name__)
+        app = Flask(__name__, template_folder="plantillas" )
         app.psdash = self
         app.config.from_envvar('PSDASH_CONFIG', silent=True)
 
@@ -159,7 +154,7 @@ class monitorLinux(object):
             app.secret_key = 'whatisthissourcery'
         app.add_template_filter(fromtimestamp)
 
-        from psdash.web import webapp
+        from controlador_web import webapp
         prefix = app.config.get('PSDASH_URL_PREFIX')
         if prefix:
             prefix = '/' + prefix.strip('/')
@@ -186,7 +181,7 @@ class monitorLinux(object):
             format=format
         )
         logging.getLogger('werkzeug').setLevel(logging.WARNING if not self.app.debug else logging.DEBUG)
-        
+
     def _config_trabajadores(self):
         net_io_interval = self.app.config.get('PSDASH_INTERVALO_CONTORNO_RED_IO', self.DEFAULT_INTERVALO_CONTORNO_RED_IO)
         gevent.spawn_later(net_io_interval, self._contadores_trabajador_red_io, net_io_interval)
@@ -266,7 +261,7 @@ class monitorLinux(object):
         self.server.run()
 
     def _run_web(self):
-        logger.info("Iniciando servidor web")
+        logger.info( "Iniciando servidor web" )
         log = 'default' if self.app.debug else None
 
         ssl_args = {}
@@ -289,7 +284,7 @@ class monitorLinux(object):
         self.server.serve_forever()
 
     def correr(self):
-        logger.info('iniciando monitorPROCESOS v%s' % __version__)
+        logger.info('iniciando monitor PROCESOS v%s' % __version__)
 
         self._config_lugar()
         self._config_trabajadores()
@@ -307,7 +302,7 @@ class monitorLinux(object):
 def principal():
     r = monitorLinux.crear_args_de_cli()
     r.correr()
-    
+
 
 if __name__ == '__main__':
     principal()

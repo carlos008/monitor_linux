@@ -1,16 +1,13 @@
 # coding=utf-8
-import logging
-import psutil
-import socket
+import logging, psutil, socket, pprint
 from datetime import datetime, timedelta
-import uuid
-import locale
+import uuid, locale
 from flask import render_template, request, session, jsonify, Response, Blueprint, current_app, g
 from werkzeug.local import LocalProxy
-from psdash.helpers import socket_families, socket_types
+from ayudas import socket_families, socket_types
 
-logger = logging.getLogger('psdash.web')
-webapp = Blueprint('psdash', __name__, static_folder='static')
+logger = logging.getLogger( 'monitorps.controlador' )
+webapp = Blueprint('psdash', __name__, static_folder='publico')
 
 
 def get_current_node():
@@ -102,7 +99,7 @@ def access_denied(e):
     errmsg = 'No process with pid %d was found.' % e.pid
     return render_template('error.html', error=errmsg), 404
 
-
+###  VISTA PRINCIPAL
 @webapp.route('/')
 def index():
     sysinfo = current_service.get_sysinfo()
@@ -122,6 +119,8 @@ def index():
         'page': 'overview',
         'is_xhr': request.is_xhr
     }
+
+    pprint.pprint( data )
 
     return render_template('index.html', **data)
 
@@ -187,7 +186,7 @@ def process(pid, section):
 
         whitelist = current_app.config.get('PSDASH_ENVIRON_WHITELIST')
         if whitelist:
-            penviron = dict((k, v if k in whitelist else '*hidden by whitelist*') 
+            penviron = dict((k, v if k in whitelist else '*hidden by whitelist*')
                              for k, v in penviron.iteritems())
 
         context['process_environ'] = penviron
@@ -218,7 +217,7 @@ def view_networks():
     # {'key', 'default_value'}
     # An empty string means that no filtering will take place on that key
     form_keys = {
-        'pid': '', 
+        'pid': '',
         'family': socket_families[socket.AF_INET],
         'type': socket_types[socket.SOCK_STREAM],
         'state': 'LISTEN'

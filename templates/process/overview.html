@@ -7,22 +7,22 @@
         </tr>
         {% if process.parent_name %}
         <tr>
-            <td>Parent</td>
+            <td>Padre</td>
             <td><a href="{{ url_for(".process", pid=process.ppid) }}">{{ process.parent_name }}</a> ({{ process.ppid }})</td>
         </tr>
         {% endif %}
         <tr>
-            <td>Command</td>
+            <td>Comando</td>
             <td>
                 {{ process.cmdline.decode("utf-8") }}
             </td>
         </tr>
         <tr>
-            <td>User</td>
+            <td>Usuario</td>
             <td>{{ process.user or "-"}}</td>
         </tr>
         <tr>
-            <td>User ids</td>
+            <td>Usuarios ids</td>
             <td>
                 <table class="table table-bordered">
                     <tr>
@@ -30,18 +30,18 @@
                         <td>{{ process.uid_real }}</td>
                     </tr>
                     <tr>
-                        <td>effective</td>
+                        <td>efectivo</td>
                         <td>{{ process.uid_effective }}</td>
                     </tr>
                     <tr>
-                        <td>saved</td>
+                        <td>guardado</td>
                         <td>{{ process.uid_saved }}</td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
-            <td>Group ids</td>
+            <td>Grupos ids</td>
             <td>
                 <table class="table table-bordered">
                     <tr>
@@ -49,7 +49,7 @@
                         <td>{{ process.gid_real }}</td>
                     </tr>
                     <tr>
-                        <td>effective</td>
+                        <td>efectivo</td>
                         <td>{{ process.gid_effective }}</td>
                     </tr>
                     <tr>
@@ -61,7 +61,7 @@
         </tr>
 
         <tr>
-            <td>Memory</td>
+            <td>Memoria</td>
             <td>
                 <table class="table table-bordered">
                     <tr>
@@ -73,11 +73,11 @@
                         <td>{{ process.mem_vms|filesizeformat }}</td>
                     </tr>
                     <tr>
-                        <td>shared</td>
+                        <td>compartido</td>
                         <td>{{ process.mem_shared|filesizeformat }}</td>
                     </tr>
                     <tr>
-                        <td>text</td>
+                        <td>texto</td>
                         <td>{{ process.mem_text|filesizeformat }}</td>
                     </tr>
                     <tr>
@@ -85,7 +85,7 @@
                         <td>{{ process.mem_lib|filesizeformat }}</td>
                     </tr>
                     <tr>
-                        <td>data</td>
+                        <td>dato</td>
                         <td>{{ process.mem_data|filesizeformat }}</td>
                     </tr>
                     <tr>
@@ -100,7 +100,7 @@
             <td>{{ process.terminal }}</td>
         </tr>
         <tr>
-            <td>Status</td>
+            <td>Estado</td>
             <td>{{ process.status }}</td>
         </tr>
         <tr>
@@ -116,11 +116,11 @@
             <td>{{ process.cwd.decode("utf-8") }}</td>
         </tr>
         <tr>
-            <td># File-descriptors</td>
+            <td># descriptores de archivos</td>
             <td>{{ process.num_files }}</td>
         </tr>
         <tr>
-            <td># Threads</td>
+            <td># Hilos</td>
             <td>{{ process.num_threads }}</td>
         </tr>
         <tr>
@@ -130,33 +130,33 @@
             <td>
                 <table class="table table-bordered">
                     <tr>
-                        <td>voluntary</td>
+                        <td>voluntario</td>
                         <td>{{ process.num_ctx_switches_vol }}</td>
                     </tr>
                     <tr>
-                        <td>involuntary</td>
+                        <td>involuntario</td>
                         <td>{{ process.num_ctx_switches_invol }}</td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
-            <td>CPU times</td>
+            <td>CPU tiempos</td>
             <td>
                 <table class="table table-bordered">
                     <tr>
-                        <td>user</td>
+                        <td>usuario</td>
                         <td>{{ process.cpu_times_user }}</td>
                     </tr>
                     <tr>
-                        <td>system</td>
+                        <td>sistema</td>
                         <td>{{ process.cpu_times_system }}</td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
-            <td>CPU affinity</td>
+            <td>afinidad CPU</td>
             <td>{{ process.cpu_affinity|join(", ") }}</td>
         </tr>
     </table>

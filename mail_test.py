@@ -18,7 +18,7 @@ class Gmail(object):
         session.ehlo
         session.login(self.email, self.password)
         self.session = session
-
+if cpu.user> 
     def send_message(self, subject, body):
         headers = [
             "From: " + self.email,
@@ -34,4 +34,5 @@ gm = Gmail( 'testing.oz.255@gmail.com', 'Aasdf12345' )
 
 #gm.send_message( 'ozzirisc@gmail.com', 'Hola juanquis' )
 gm.send_message( 'veizagacabrerajuancarlos.jcvc@gmail.com', 'Hola juanquis, como estas hoy!!!!!' )
+
 

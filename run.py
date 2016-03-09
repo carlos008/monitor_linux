@@ -17,7 +17,7 @@ from psdash.node import LocalNode, RemoteNode
 from psdash.web import fromtimestamp
 
 
-logger = getLogger('psdash.correr')
+logger = getLogger('monitorps.correr')
 
 
 class monitorLinux(object):
@@ -289,7 +289,7 @@ class monitorLinux(object):
         self.server.serve_forever()
 
     def correr(self):
-        logger.info('iniciando psDash v%s' % __version__)
+        logger.info('iniciando monitorPROCESOS v%s' % __version__)
 
         self._config_lugar()
         self._config_trabajadores()

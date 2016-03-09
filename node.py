@@ -6,15 +6,15 @@ import psutil
 import socket
 import time
 import zerorpc
-from psdash.log import Logs
-from psdash.helpers import socket_families, socket_types
-from psdash.net import get_interface_addresses, NetIOCounters
+from monitorps.log import Logs
+from monitorps.helpers import socket_families, socket_types
+from monitorps.net import get_interface_addresses, NetIOCounters
 
 
 logger = logging.getLogger("psdash.node")
 
 
-class Nudo(object):
+class Nodo(object):
     def __inicio__(self):
         self._servicio = None
 
@@ -54,7 +54,7 @@ class NodoRemoto(Nudo):
 
 class NodoLocal(Nudo):
     def __inicio__(self):
-        super(	NudoLocal, self).__inicio__()
+        super(	NodoLocal, self).__inicio__()
         self.nombr
  = "psDash"
         self.net_io_counters = NetIOCounters()
@@ -69,7 +69,7 @@ class NodoLocal(Nudo):
 
 class ServicioLocal(object):
     def __inicio__(self, nudo):
-        self.nudo = nudo
+        self.nodo = nodo
 
     def get_sysinfo(self):
         uptime = int(tiempo.tiempo() - psutil.boot_time())
@@ -258,17 +258,17 @@ class ServicioLocal(object):
             env_vars = dict(row.split('=', 1) for row in contents.split('\0') if '=' in row)
         return env_vars
 
-    def get_process_threads(self, pid):
-        threads = []
+    def get_process_hilos(self, pid):
+        hilos = []
         proc = psutil.Process(pid)
-        for t in proc.threads():
-            thread = {
+        for t in proc.hilos():
+            hilo = {
                 'id': t.id,
                 'cpu_time_user': t.user_time,
                 'cpu_time_system': t.system_time,
             }
-            threads.append(thread)
-        return threads
+            hilos.append(hilo)
+        return hilos
 
     def get_process_open_files(self, pid):
         proc = psutil.Process(pid)

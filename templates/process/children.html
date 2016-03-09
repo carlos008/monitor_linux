@@ -4,8 +4,8 @@
         <thead>
             <tr>
                 <th>PID</th>
-                <th>Name</th>
-                <th>Status</th>
+                <th>Nombre</th>
+                <th>Estado</th>
             </tr>
         </thead>
         <tbody>
@@ -13,9 +13,9 @@
                 <tr>
                     <td>{{ p.pid }}</td>
                     <td title="{{ p.cmdline }}">
-                        <a href="{{ url_for(".process", pid=p.pid) }}">{{ p.name }}</a>
+                        <a href="{{ url_for(".process", pid=p.pid) }}">{{ p.nombre }}</a>
                     </td>
-                    <td>{{ p.status }}</td>
+                    <td>{{ p.estado }}</td>
                 </tr>
             {% endfor %}
         </tbody>

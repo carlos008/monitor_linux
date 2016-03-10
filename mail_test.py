@@ -18,7 +18,6 @@ class Gmail(object):
         session.ehlo
         session.login(self.email, self.password)
         self.session = session
-if cpu.user> 
     def send_message(self, subject, body):
         headers = [
             "From: " + self.email,

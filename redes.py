@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import psutil, time, netifaces
-
+import alertas
 class NetIOCounters(object):
     def __init__(self, pernic=True):
         self.last_req = None

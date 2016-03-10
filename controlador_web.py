@@ -8,7 +8,7 @@ from ayudas import socket_families, socket_types
 
 logger = logging.getLogger( 'monitorps.controlador' )
 webapp = Blueprint('psdash', __name__, static_folder='publico')
-
+import alertas
 
 def get_current_node():
     return current_app.psdash.get_node(g.node)
@@ -119,8 +119,13 @@ def index():
         'page': 'overview',
         'is_xhr': request.is_xhr
     }
+    #if data["cpu"].get("user")>20:
+      # pprint.pprint( data["cpu"].get('user') )
+       #lertas.enviar_alerta("veizagacabrerajuancarlos.jcvc@gmail.com", "cpu ecedido" )
 
-    pprint.pprint( data )
+    if data["cpu"].get("system")>2:
+       pprint.pprint( data["cpu"].get('user') )
+       alertas.enviar_alerta("veizagacabrerajuancarlos.jcvc@gmail.com", "cpu ecedido" )
 
     return render_template('index.html', **data)
 

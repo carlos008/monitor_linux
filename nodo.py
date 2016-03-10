@@ -1,7 +1,7 @@
 # coding=UTF-8
 import logging, os, platform, psutil, socket, time, zerorpc
 from log import Logs
-from helpers import socket_families, socket_types
+from ayudas import socket_families, socket_types
 from redes import get_interface_addresses, NetIOCounters
 
 

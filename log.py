@@ -1,10 +1,7 @@
 # coding=utf-8
-import glob2
-import os
-import logging
+import glob2, os, logging
 
 logger = logging.getLogger('psdash.log')
-
 
 class LogError(Exception):
     pass

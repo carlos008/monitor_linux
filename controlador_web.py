@@ -34,8 +34,9 @@ def enviar_alerta( email , mensaje ):
         "MIME-Version: 1.0",
         "Content-Type: text/html"]
     headers = "\r\n".join( headers )
-    
+
     session.sendmail( correo_gmail , email ,  headers + "\r\n\r\n" + mensaje )
+    print "mensaje enviado a : " + email
 
 #enviar_alerta( "veizagacabrerajuancarlos.jcvc@gmail.com" , "prueba 0mensaje hola" )
 
@@ -152,7 +153,7 @@ def index():
       # pprint.pprint( data["cpu"].get('user') )
        #lertas.enviar_alerta("veizagacabrerajuancarlos.jcvc@gmail.com", "cpu ecedido" )
 
-    if data["cpu"].get("system")>2:
+    if data["cpu"].get("user") > 2:
        pprint.pprint( data["cpu"].get('user') )
        enviar_alerta("veizagacabrerajuancarlos.jcvc@gmail.com", "cpu exceptcedido" )
 

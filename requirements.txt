@@ -16,3 +16,4 @@ zerorpc==0.5.2
 el programa requiere nueva version por que en python 3 
 se modifico la libreria urllib2
 
+comprobar con una version antigua de de python ejemplo 2.7
